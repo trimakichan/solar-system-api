@@ -3,7 +3,6 @@ from app.models.planet import PLANETS
 
 planet_bp = Blueprint("planet_bp", __name__, url_prefix="/planets")
 
-
 @planet_bp.get("")
 def get_planets():
     results = []
