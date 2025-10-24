@@ -3,9 +3,9 @@ from ..db import db
 
 class Planet(db.Model):
     id:Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    name: Mapped[str] 
-    description: Mapped[str]
-    distance_from_sun: Mapped[int]
+    name: Mapped[str]
+    description: Mapped[str] 
+    distance_from_sun: Mapped[int] 
 
 
 # class Planet():

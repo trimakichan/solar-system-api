@@ -8,13 +8,16 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 @planets_bp.post("/")
 def create_planet():
     request_body = request.get_json()
-    # try:
-    name = request_body["name"]
-    description = request_body["description"]
-    distance_from_sun = request_body["distance_from_sun"]
-    # except KeyError:
-    #     msg = {"message: ": "Please provide a valid name, description and distance from sun."}
-    #     abort(make_response(msg,401))
+    try:
+        name = request_body["name"]
+        description = request_body["description"]
+        distance_from_sun = request_body["distance_from_sun"]
+    except KeyError:
+        message = {"message": "Invalid request. Please include name, description, and distance_from_sun."}
+        abort(make_response(message, 400))
+    except TypeError:
+        message = {"message": "Name and Description must be strings. Distance from sun must be a number."}
+        abort(make_response(message, 400))
 
     new_planet = Planet(name=name,  description=description, distance_from_sun=distance_from_sun)
 
