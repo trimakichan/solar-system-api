@@ -6,7 +6,18 @@ planets_bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 @planets_bp.get("/")
 def get_all_planets():
-    query = db.select(Planet).order_by(Planet.id)
+    query = db.select(Planet)
+
+    name_param = request.args.get("name")
+    if name_param:
+        query = query.where(Planet.name.ilike(f"%{name_param}%"))
+
+    desc_param = request.args.get("description")
+    if desc_param:
+        query = query.where(Planet.description.ilike(f"%{desc_param}%"))
+
+    query = query.order_by(Planet.id)
+
     planets = db.session.scalars(query)
 
     planets_response = []
