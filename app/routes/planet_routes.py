@@ -43,9 +43,9 @@ def create_planet():
     except KeyError:
         message = {"message": "Invalid request. Please include name, description, and distance_from_sun."}
         abort(make_response(message, 400))
-    except TypeError:
-        message = {"message": "Name and Description must be strings. Distance from sun must be a number."}
-        abort(make_response(message, 400))
+    # except TypeError:
+    #     message = {"message": "Name and Description must be strings. Distance from sun must be a number."}
+    #     abort(make_response(message, 400))
 
     new_planet = Planet(name=name,  description=description, distance_from_sun=distance_from_sun)
 
