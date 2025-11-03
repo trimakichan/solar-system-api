@@ -16,8 +16,11 @@ def get_all_planets():
     if desc_param:
         query = query.where(Planet.description.ilike(f"%{desc_param}%"))
 
-    query = query.order_by(Planet.id)
+    distance_max = request.args.get("distance_max")
+    if distance_max:
+        query = query.where(Planet.distance_from_sun <= distance_max)
 
+    query = query.order_by(Planet.id)
     planets = db.session.scalars(query)
 
     planets_response = []
