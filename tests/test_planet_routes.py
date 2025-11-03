@@ -12,7 +12,7 @@ def test_get_a_404_response(client):
     response_body = response.get_json()
 
     assert response.status_code == 404
-    assert response_body == {"message": "Planet 1 is not found."}
+    assert response_body == {"message": "Planet 1 not found"}
 
 def test_get_one_planet(client, add_one_planet):
     response = client.get("/planets/1")
