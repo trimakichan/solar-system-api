@@ -61,19 +61,4 @@ def delete_planet(planet_id):
 
     return Response(status=204, mimetype="application/json")
 
-# def validate_model(planet_id):
-#     try:
-#         planet_id = int(planet_id)
-#     except ValueError:
-#         msg = {"message": f"Planet {planet_id} invalid."}
-#         abort(make_response(msg, 400))
-
-#     query = db.select(Planet).where(Planet.id == planet_id)
-#     planet = db.session.scalar(query)
-
-#     if not planet:
-#         msg = {"message" : f"Planet {planet_id} is not found."}  
-#         abort(make_response(msg, 404))
-        
-#     return planet
 

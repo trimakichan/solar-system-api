@@ -1,9 +1,6 @@
-from flask import Blueprint, abort, make_response, request, Response
-from .route_utilities import create_model, validate_model, get_models_with_filters
+from flask import Blueprint, request
+from .route_utilities import create_model, get_models_with_filters
 from ..models.moon import Moon
-from ..models.planet import Planet
-from ..db import db
-
 
 bp = Blueprint("moons_bp", __name__, url_prefix="/moons")
 
