@@ -1,59 +1,40 @@
 from flask import Blueprint, abort, make_response, request, Response
 from app.models.planet import Planet
-from .route_utilities import validate_model
+from app.models.moon import Moon
+from .route_utilities import validate_model, create_model, get_models_with_filters
 from ..db import db
 
 bp = Blueprint("planets_bp", __name__, url_prefix="/planets")
 
 @bp.get("/")
 def get_all_planets():
-    query = db.select(Planet)
-
-    name_param = request.args.get("name")
-    if name_param:
-        query = query.where(Planet.name.ilike(f"%{name_param}%"))
-
-    desc_param = request.args.get("description")
-    if desc_param:
-        query = query.where(Planet.description.ilike(f"%{desc_param}%"))
-
-    distance_max = request.args.get("distance_max")
-    if distance_max:
-        query = query.where(Planet.distance_from_sun <= distance_max)
-
-    query = query.order_by(Planet.id)
-    planets = db.session.scalars(query)
-
-    planets_response = []
-    for planet in planets:
-        planets_response.append(
-            planet.to_dict()
-        )
-    return planets_response
+    return get_models_with_filters(Planet, request.args)
 
 @bp.get("/<planet_id>")
 def get_one_planet(planet_id):
     planet = validate_model(Planet, planet_id)
     return planet.to_dict()
 
-
 @bp.post("/")
 def create_planet():
     request_body = request.get_json()
-    try:
-            new_planet = Planet.from_dict(request_body)
-    except KeyError:
-        message = {"message": "Invalid request. Please include name, description, and distance_from_sun."}
-        abort(make_response(message, 400))
-    # except TypeError:
-    #     message = {"message": "Name and Description must be strings. Distance from sun must be a number."}
-    #     abort(make_response(message, 400))
+    return create_model(Planet, request_body)
 
-    db.session.add(new_planet)
-    db.session.commit()
+@bp.post("/<planet_id>/moons")
+def create_moon_with_planet(planet_id):
+    planet = validate_model(Planet, planet_id)
+    request_body = request.get_json()
+    request_body["planet_id"] = planet.id
 
-    return new_planet.to_dict(), 201
 
+    return create_model(Moon, request_body)
+
+@bp.get("/<planet_id>/moons")
+def get_all_moons(planet_id):
+    planet = validate_model(Planet, planet_id)
+    moons = [moon.to_dict() for moon in planet.moons]
+
+    return moons
 
 @bp.put("/<planet_id>")
 def replace_planet(planet_id):
